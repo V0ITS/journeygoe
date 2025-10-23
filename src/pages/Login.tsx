@@ -28,16 +28,20 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     try {
+      setLoading(true);
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/`,
+          skipBrowserRedirect: false,
         },
       });
       
       if (error) throw error;
+      toast.success("Membuka popup Google login...");
     } catch (error: any) {
       toast.error(error.message || "Gagal login dengan Google");
+      setLoading(false);
     }
   };
 
@@ -134,6 +138,7 @@ const Login = () => {
           variant="outline"
           className="w-full"
           onClick={handleGoogleLogin}
+          disabled={loading}
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
             <path

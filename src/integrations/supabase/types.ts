@@ -14,7 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          favorite_style: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          favorite_style?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          favorite_style?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      travel_plans: {
+        Row: {
+          ai_recommendation: Json | null
+          cost_breakdown: Json | null
+          created_at: string | null
+          destination: string
+          duration: number
+          id: string
+          people_count: number
+          total_cost: number | null
+          travel_style: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_recommendation?: Json | null
+          cost_breakdown?: Json | null
+          created_at?: string | null
+          destination: string
+          duration: number
+          id?: string
+          people_count: number
+          total_cost?: number | null
+          travel_style: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_recommendation?: Json | null
+          cost_breakdown?: Json | null
+          created_at?: string | null
+          destination?: string
+          duration?: number
+          id?: string
+          people_count?: number
+          total_cost?: number | null
+          travel_style?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
