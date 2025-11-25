@@ -19,42 +19,47 @@ const MapView = ({ locations, center, zoom = 10 }: MapViewProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState<string>(() => {
-    return localStorage.getItem('mapbox_api_key') || '';
-  });
-  const [showInput, setShowInput] = useState<boolean>(false);
 
   useEffect(() => {
     if (!mapContainer.current) return;
     if (map.current) return; // Initialize map only once
 
     try {
-      // Get Mapbox token from state or environment
-      const mapboxToken = apiKey || import.meta.env.VITE_MAPBOX_API_KEY;
+      // Get Mapbox token from environment (STRICT MODE - AUTO TOKEN ONLY)
+      const MAPBOX_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
       
-      if (!mapboxToken) {
-        setShowInput(true);
-        setMapError('Mapbox API Key belum dikonfigurasi');
+      if (!MAPBOX_KEY) {
+        setMapError('Mapbox API Key belum di-set di Secrets.');
         return;
       }
 
-      mapboxgl.accessToken = mapboxToken;
+      mapboxgl.accessToken = MAPBOX_KEY;
 
       // Calculate center from locations if not provided
       const mapCenter = center || (locations.length > 0 
         ? locations[0].coordinates 
-        : [106.8456, -6.2088]); // Default to Jakarta
+        : [106.8272, -6.1754]); // Default to Jakarta
 
       // Initialize map
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/streets-v12',
+        style: 'mapbox://styles/mapbox/streets-v11',
         center: mapCenter,
         zoom: zoom,
       });
 
       // Add navigation controls
       map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
+      // Get user's current location (Geolocation)
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          const { latitude, longitude } = pos.coords;
+          if (map.current) {
+            map.current.setCenter([longitude, latitude]);
+          }
+        });
+      }
 
       // Add markers for each location
       locations.forEach((location) => {
@@ -104,57 +109,12 @@ const MapView = ({ locations, center, zoom = 10 }: MapViewProps) => {
     return () => {
       map.current?.remove();
     };
-  }, [locations, center, zoom, apiKey]);
+  }, [locations, center, zoom]);
 
-  const handleSaveApiKey = (key: string) => {
-    localStorage.setItem('mapbox_api_key', key);
-    setApiKey(key);
-    setShowInput(false);
-    setMapError(null);
-    // Reload page to reinitialize map
-    window.location.reload();
-  };
-
-  if (mapError && showInput) {
+  if (mapError) {
     return (
-      <Card className="p-6 space-y-4">
-        <div className="text-center space-y-2">
-          <p className="text-destructive font-semibold">⚠️ {mapError}</p>
-          <p className="text-sm text-muted-foreground">
-            Dapatkan token dari{' '}
-            <a 
-              href="https://mapbox.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              mapbox.com
-            </a>
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Masukkan Mapbox Public Token..."
-            className="flex-1 px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && e.currentTarget.value.trim()) {
-                handleSaveApiKey(e.currentTarget.value.trim());
-              }
-            }}
-          />
-          <button
-            onClick={(e) => {
-              const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-              if (input?.value.trim()) {
-                handleSaveApiKey(input.value.trim());
-              }
-            }}
-            className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-          >
-            Simpan
-          </button>
-        </div>
+      <Card className="p-6 text-center">
+        <p className="text-destructive font-semibold">⚠️ {mapError}</p>
       </Card>
     );
   }
