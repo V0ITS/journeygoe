@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Card } from '@/components/ui/card';
+import { MAPBOX_KEY } from '../env';
 
 interface Location {
   name: string;
@@ -24,14 +25,13 @@ const MapView = ({ locations, center, zoom = 10 }: MapViewProps) => {
     if (!mapContainer.current) return;
     if (map.current) return; // Initialize map only once
 
+    // Get Mapbox token from environment (STRICT MODE - AUTO TOKEN ONLY)
+    if (!MAPBOX_KEY) {
+      setMapError('Mapbox API Key belum di-set di Secrets.');
+      return;
+    }
+
     try {
-      // Get Mapbox token from environment (STRICT MODE - AUTO TOKEN ONLY)
-      const MAPBOX_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
-      
-      if (!MAPBOX_KEY) {
-        setMapError('Mapbox API Key belum di-set di Secrets.');
-        return;
-      }
 
       mapboxgl.accessToken = MAPBOX_KEY;
 
