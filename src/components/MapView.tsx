@@ -22,7 +22,16 @@ const MapView = ({ locations, center, zoom = 10 }: MapViewProps) => {
     if (!mapContainer.current) return;
     if (map.current) return;
 
-    mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_API_KEY;
+    const token = import.meta.env.VITE_MAPBOX_API_KEY;
+    console.log('Mapbox token loaded:', token ? 'YES' : 'NO');
+    console.log('Token value:', token);
+    
+    if (!token) {
+      console.error('VITE_MAPBOX_API_KEY is not defined in environment');
+      return;
+    }
+
+    mapboxgl.accessToken = token;
 
     const mapCenter = center || (locations.length > 0 
       ? locations[0].coordinates 
