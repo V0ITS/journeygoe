@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JourneyGo - AI Smart Travel Planner</title>
+    <meta name="description" content="Plan your perfect journey with AI-powered travel planning and budget management" />
+    <meta name="author" content="JourneyGo" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JourneyGo - AI Smart Travel Planner" />
+    <meta property="og:description" content="Plan your perfect journey with AI-powered travel planning and budget management" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <!-- ✅ Tambahkan manifest -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./favicon.ico" />
+
+    <!-- Warna theme (opsional tapi bagus untuk PWA) -->
+    <meta name="theme-color" content="#4CAF50" />
+    
+    <!-- PWA Apple Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="JourneyGo" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+    
+    <!-- PWA Windows Support -->
+    <meta name="msapplication-TileColor" content="#4CAF50" />
+    <meta name="msapplication-TileImage" content="./icons/icon-192.png" />
+    <meta name="msapplication-config" content="./browserconfig.xml" />
+    <script type="module" crossorigin src="/journeygoe/assets/index-sYZLZvb6.js"></script>
+    <link rel="stylesheet" crossorigin href="/journeygoe/assets/index-Bmac16Us.css">
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <!-- ✅ Tambahkan service worker -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          // register relative to document so it works on GitHub Pages subpath
+          navigator.serviceWorker.register("./service-worker.js")
+            .then(() => console.log("SW registered"))
+            .catch(err => console.log("SW error:", err));
+        });
+      }
+    </script>
+
+  </body>
+</html>
